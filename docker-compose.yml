@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: marcus
+      MYSQL_PASSWORD: marcus@123
+      MYSQL_DATABASE: bookteria_identity
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4j_container
+    environment:
+      NEO4J_AUTH: neo4j/marcus@123
+    ports:
+      - "7474:7474"   # HTTP
+      - "7687:7687"   # Bolt
+volumes:
+  mysql_data:
+  neo4j_data:
