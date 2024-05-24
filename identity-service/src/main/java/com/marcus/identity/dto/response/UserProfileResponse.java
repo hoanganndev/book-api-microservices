@@ -1,6 +1,4 @@
-package com.marcus.profile.dto.request;
-
-import java.time.LocalDate;
+package com.marcus.identity.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,13 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProfileCreationRequest {
-    String userId;
+public class UserProfileResponse {
+    String id;
     String firstName;
     String lastName;
     LocalDate dob;
