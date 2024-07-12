@@ -3,15 +3,13 @@ package com.marcus.identity.service;
 import java.util.HashSet;
 import java.util.List;
 
-import com.marcus.identity.dto.request.ProfileCreationRequest;
-import com.marcus.identity.mapper.ProfileMapper;
-import com.marcus.identity.repository.httpclient.ProfileClient;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.marcus.identity.constant.PredefinedRole;
+import com.marcus.identity.dto.request.ProfileCreationRequest;
 import com.marcus.identity.dto.request.UserCreationRequest;
 import com.marcus.identity.dto.request.UserUpdateRequest;
 import com.marcus.identity.dto.response.UserResponse;
@@ -19,9 +17,11 @@ import com.marcus.identity.entity.Role;
 import com.marcus.identity.entity.User;
 import com.marcus.identity.exception.AppException;
 import com.marcus.identity.exception.ErrorCode;
+import com.marcus.identity.mapper.ProfileMapper;
 import com.marcus.identity.mapper.UserMapper;
 import com.marcus.identity.repository.RoleRepository;
 import com.marcus.identity.repository.UserRepository;
+import com.marcus.identity.repository.httpclient.ProfileClient;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     ProfileClient profileClient;
     ProfileMapper profileMapper;
-    
+
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
 
@@ -51,11 +51,11 @@ public class UserService {
 
         user.setRoles(roles);
         user = userRepository.save(user);
-        
+
         ProfileCreationRequest profileRequest = profileMapper.toProfileCreationRequest(request);
         profileRequest.setUserId(user.getId());
         profileClient.createProfile(profileRequest);
-        
+
         return userMapper.toUserResponse(user);
     }
 
