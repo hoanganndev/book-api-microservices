@@ -1,5 +1,6 @@
 package com.marcus.profile.service;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.marcus.profile.dto.request.ProfileCreationRequest;
@@ -35,6 +36,7 @@ public class UserProfileService {
         return userProfileMapper.toUserProfileResponse(userProfile);
     }
     
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserProfileResponse> getAllProfiles() {
         List<UserProfile> profiles = userProfileRepository.findAll();
         return profiles.stream().map(userProfileMapper::toUserProfileResponse).toList();

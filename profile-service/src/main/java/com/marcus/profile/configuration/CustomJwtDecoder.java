@@ -1,4 +1,4 @@
-package com.marcus.identity.configuration;
+package com.marcus.profile.configuration;
 
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.security.oauth2.jwt.Jwt;
