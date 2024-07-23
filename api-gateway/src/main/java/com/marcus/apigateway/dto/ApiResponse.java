@@ -1,8 +1,11 @@
-package com.marcus.identity.dto.request;
+package com.marcus.apigateway.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
@@ -14,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 public class ApiResponse<T> {
     @Builder.Default
     private int code = 1000;
-
+    
     private String message;
     private T result;
 }

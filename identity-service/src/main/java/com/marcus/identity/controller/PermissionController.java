@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.marcus.identity.dto.request.ApiResponse;
+import com.marcus.identity.dto.ApiResponse;
 import com.marcus.identity.dto.request.PermissionRequest;
 import com.marcus.identity.dto.response.PermissionResponse;
 import com.marcus.identity.service.PermissionService;
