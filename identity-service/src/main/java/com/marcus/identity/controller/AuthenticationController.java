@@ -2,12 +2,12 @@ package com.marcus.identity.controller;
 
 import java.text.ParseException;
 
-import com.marcus.identity.dto.ApiResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.marcus.identity.dto.ApiResponse;
 import com.marcus.identity.dto.request.*;
 import com.marcus.identity.dto.response.AuthenticationResponse;
 import com.marcus.identity.dto.response.IntrospectResponse;

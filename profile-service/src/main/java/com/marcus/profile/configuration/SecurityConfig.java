@@ -16,9 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String[] PUBLIC_ENDPOINTS = {
-            "/internal/users"
-    };
+    private static final String[] PUBLIC_ENDPOINTS = {"/internal/users"};
 
     private final CustomJwtDecoder customJwtDecoder;
 
@@ -35,8 +33,7 @@ public class SecurityConfig {
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                         .decoder(customJwtDecoder)
-                        .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                )
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 

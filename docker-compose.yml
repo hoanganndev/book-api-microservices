@@ -1,20 +1,19 @@
 version: '3.8'
-
 services:
   mysql:
     image: mysql:8.0
     container_name: mysql_container
-    command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: marcus
       MYSQL_PASSWORD: marcus@123
-      MYSQL_DATABASE: bookteria_identity
+      MYSQL_DATABASE: book_identity
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - book-api-network
   neo4j:
     image: neo4j:latest
     container_name: neo4j_container
@@ -23,6 +22,46 @@ services:
     ports:
       - "7474:7474"   # HTTP
       - "7687:7687"   # Bolt
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - book-api-network
+  mongodb:
+    image: 'bitnami/mongodb:7.0.11'
+    container_name: mongodb_container
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGODB_ROOT_USER=root
+      - MONGODB_ROOT_PASSWORD=root
+    volumes:
+      - mongodb_data:/bitnami/mongodb
+    networks:
+      - book-api-network
+  kafka:
+    image: 'bitnami/kafka:3.7.0'
+    container_name: kafka
+    hostname: kafka
+    ports:
+      - '9094:9094'
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    volumes:
+      - kafka_data:/bitnami/kafka
+    networks:
+      - book-api-network
+    
 volumes:
   mysql_data:
   neo4j_data:
+  mongodb_data:
+  kafka_data:
+    
+networks:
+  book-api-network:
