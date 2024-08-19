@@ -116,10 +116,10 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>com/devteria/profile/dto/**</exclude>
-						<exclude>com/devteria/profile/entity/**</exclude>
-						<exclude>com/devteria/profile/mapper/**</exclude>
-						<exclude>com/devteria/profile/configuration/**</exclude>
+						<exclude>com/marcus/profile/dto/**</exclude>
+						<exclude>com/marcus/profile/entity/**</exclude>
+						<exclude>com/marcus/profile/mapper/**</exclude>
+						<exclude>com/marcus/profile/configuration/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

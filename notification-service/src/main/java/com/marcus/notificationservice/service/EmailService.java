@@ -1,9 +1,5 @@
 package com.marcus.notificationservice.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.marcus.notificationservice.dto.request.EmailRequest;
 import com.marcus.notificationservice.dto.request.SendEmailRequest;
 import com.marcus.notificationservice.dto.request.Sender;
@@ -11,24 +7,30 @@ import com.marcus.notificationservice.dto.response.EmailResponse;
 import com.marcus.notificationservice.exception.AppException;
 import com.marcus.notificationservice.exception.ErrorCode;
 import com.marcus.notificationservice.repository.httpclient.EmailClient;
-
 import feign.FeignException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmailService {
-    EmailClient emailClient;
+    @Value("${notification.email.brevo-apikey}")
+    @NonFinal
+    String apiKey;
 
-    String apiKey = "real api key";
+    EmailClient emailClient;
 
     public EmailResponse sendEmail(SendEmailRequest request) {
         EmailRequest emailRequest = EmailRequest.builder()
                 .sender(Sender.builder()
-                        .name("NGUYEN HOANG AN")
+                        .name("Marcus Solution")
                         .email("hoangann.dev@gmail.com")
                         .build())
                 .to(List.of(request.getTo()))
