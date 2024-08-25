@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static com.marcus.postservice.utils.StringUtils.generateRandomText;
 
@@ -28,8 +27,9 @@ import static com.marcus.postservice.utils.StringUtils.generateRandomText;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PostService {
+    DateTimeFormatter dateTimeFormatter;
     PostRepository repository;
-    PostMapper mapper;
+    PostMapper postMapper;
 
     public PostResponse createPost(PostRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -40,12 +40,12 @@ public class PostService {
                 .modifiedDate(Instant.now())
                 .build();
         post = repository.save(post);
-        return mapper.toPostResponse(post);
+        return postMapper.toPostResponse(post);
     }
 
 
     public List<PostResponse> createPosts(int numberRecord) {
-        if (numberRecord <= 0) return null;
+        if (numberRecord <= 0) return List.of();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<PostResponse> posts = new ArrayList<>();
         for (int i = 0; i < numberRecord; i++) {
@@ -56,7 +56,7 @@ public class PostService {
                     .createdDate(Instant.now())
                     .modifiedDate(Instant.now())
                     .build();
-            posts.add(mapper.toPostResponse(repository.save(post)));
+            posts.add(postMapper.toPostResponse(repository.save(post)));
         }
         return posts;
     }
@@ -67,7 +67,7 @@ public class PostService {
         String userId = authentication.getName();
         return repository.findAllByUserId(userId)
                 .stream()
-                .map(mapper::toPostResponse)
+                .map(postMapper::toPostResponse)
                 .toList();
     }
 
@@ -77,12 +77,17 @@ public class PostService {
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         Page<Post> pageData = repository.findAllByUserId(userId, pageable);
+        List<PostResponse> postList = pageData.getContent().stream().map(post -> {
+            PostResponse postResponse = postMapper.toPostResponse(post);
+            postResponse.setCreated(dateTimeFormatter.format(post.getCreatedDate()));
+            return postResponse;
+        }).toList();
         return PageResponse.<PostResponse>builder()
                 .currentPage(page)
                 .pageSize(pageData.getSize())
                 .totalPages(pageData.getTotalPages())
                 .totalElements(pageData.getTotalElements())
-                .data(pageData.getContent().stream().map(mapper::toPostResponse).toList())
+                .data(postList)
                 .build();
     }
 }
